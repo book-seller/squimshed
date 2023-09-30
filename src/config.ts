@@ -9,21 +9,18 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
   version: '1.0.0',
   width: 800,
   height: 600,
-  // zoom: 0.6,
   type: Phaser.AUTO,
   parent: 'game',
   scene: [BootScene, MenuScene, GameScene],
-  // scene: [BootScene],
   input: {
     keyboard: true
   },
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 0 },
+      gravity: { y: 300 },
       debug: false
     }
   },
   backgroundColor: '#808080',
-  // render: { pixelArt: false, antialias: true }
 };

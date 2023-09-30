@@ -10,6 +10,35 @@
           "type": "image",
           "key": "player-dragon",
           "url": "./assets/sprites/player-dragon.png"
+        },
+        {
+          "type": "image",
+          "key": "sky",
+          "url": "./assets/sky.png"
+        },
+        {
+          "type": "image",
+          "key": "ground",
+          "url": "./assets/platform.png"
+        },
+        {
+          "type": "image",
+          "key": "star",
+          "url": "./assets/star.png"
+        },
+        {
+          "type": "image",
+          "key": "bomb",
+          "url": "./assets/bomb.png"
+        },
+        {
+          "type": "spritesheet",
+          "key": "dude",
+          "url": "./assets/dude.png",
+          "frameConfig": {
+            "frameWidth": 32,
+            "frameHeight": 48
+          }
         }
       ]
     }
