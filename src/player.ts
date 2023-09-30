@@ -3,7 +3,7 @@ import * as Phaser from 'phaser';
 export class Player extends Phaser.Physics.Arcade.Sprite {
     cursors: Phaser.Types.Input.Keyboard.CursorKeys
 
-    walkSpeed: number = 220;
+    walkSpeed: number = 235;
     jumpSpeed: number = 550;
 
     constructor(scene: Phaser.Scene, x: number, y: number) {

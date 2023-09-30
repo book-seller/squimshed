@@ -33,6 +33,11 @@
         },
         {
           "type": "image",
+          "key": "coin",
+          "url": "./assets/coin.png"
+        },
+        {
+          "type": "image",
           "key": "bomb",
           "url": "./assets/bomb.png"
         },
