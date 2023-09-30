@@ -23,6 +23,11 @@
         },
         {
           "type": "image",
+          "key": "wall",
+          "url": "./assets/wall.png"
+        },
+        {
+          "type": "image",
           "key": "star",
           "url": "./assets/star.png"
         },
