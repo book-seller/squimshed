@@ -37,6 +37,11 @@
           "url": "./assets/bomb.png"
         },
         {
+          "type": "image",
+          "key": "derg",
+          "url": "./assets/derg.png"
+        },
+        {
           "type": "spritesheet",
           "key": "dude",
           "url": "./assets/dude.png",

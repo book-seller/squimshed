@@ -3,8 +3,11 @@ import * as Phaser from 'phaser';
 export class Player extends Phaser.Physics.Arcade.Sprite {
     cursors: Phaser.Types.Input.Keyboard.CursorKeys
 
+    walkSpeed: number = 220;
+    jumpSpeed: number = 550;
+
     constructor(scene: Phaser.Scene, x: number, y: number) {
-        super(scene, x, y, 'dude', 0);
+        super(scene, x, y, 'derg', 0);
         // Enable Player's Physics Body
         scene.physics.world.enable(this)
         // All of these attempts to enable the body failed, sigh
@@ -12,9 +15,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         // scene.physics.add.sprite(x, y, 'dude')
         // this.enableBody();
         // this.anchor.setTo(0.5, 0);
-        this.setBounce(0.2);
+        // Bounce = artificial difficulty
+        // this.setBounce(0.2);
         this.setCollideWorldBounds(true);
 
+        // TODO: Bring this back when we have dragon animations
+        /*
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
@@ -34,6 +40,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
             frameRate: 10,
             repeat: -1
         });
+        */
 
         scene.add.existing(this);
 
@@ -42,23 +49,23 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(): void {
         if (this.cursors.left.isDown) {
-            this.setVelocityX(-160);
+            this.setVelocityX(-this.walkSpeed);
       
-            this.anims.play('left', true);
+            // this.anims.play('left', true);
           }
           else if (this.cursors.right.isDown) {
-            this.setVelocityX(160);
+            this.setVelocityX(this.walkSpeed);
       
-            this.anims.play('right', true);
+            // this.anims.play('right', true);
           }
           else {
             this.setVelocityX(0);
       
-            this.anims.play('turn');
+            // this.anims.play('turn');
           }
       
           if (this.cursors.up.isDown && this.body.touching.down) {
-            this.setVelocityY(-330);
+            this.setVelocityY(-this.jumpSpeed);
           }
     }
 }

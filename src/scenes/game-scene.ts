@@ -17,6 +17,9 @@ export class GameScene extends Phaser.Scene {
   init(): void {}
 
   create(): void {
+    this.cameras.main.setBounds(0, 0, 1000, 700);
+    this.physics.world.setBounds(0, 0, 1000, 700);
+
     this.add.image(400, 300, 'sky');
 
     this.platforms = this.physics.add.staticGroup();
@@ -35,12 +38,15 @@ export class GameScene extends Phaser.Scene {
 
     this.player = new Player(this, 100, 450);
 
+    this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+
     this.physics.add.collider(this.player, this.topWall);
     this.physics.add.collider(this.player, this.platforms);
   }
 
   update(): void {
-    this.topWall.setY(this.topWall.y + .1)
+    // Move walls
+    // this.topWall.setY(this.topWall.y + .1)
     // Whyyyyyyy???!!!!
     this.player.update()
   }
