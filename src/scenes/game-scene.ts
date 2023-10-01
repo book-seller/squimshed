@@ -8,6 +8,7 @@ export class GameScene extends Phaser.Scene {
   walls: Phaser.Physics.Arcade.Group
   coins: Phaser.GameObjects.Group
   topWall: Phaser.GameObjects.TileSprite
+  bottomWall: Phaser.GameObjects.TileSprite
   coinsLeftText: Phaser.GameObjects.Text
   // Colliders
   playerWallCollider: Phaser.Physics.Arcade.Collider
@@ -26,6 +27,7 @@ export class GameScene extends Phaser.Scene {
     this.coins = undefined
     this.walls = undefined
     this.topWall = undefined
+    this.bottomWall = undefined
     this.player = undefined
     this.coinsLeftText = undefined
     // Colliders
@@ -36,15 +38,13 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     this.cameras.main.setBounds(0, 0, 1000, 700);
     this.physics.world.setBounds(0, 0, 1000, 700);
-
-    // this.add.image(400, 300, 'sky');
-
+    // Platforms
     this.platforms = this.physics.add.staticGroup();
     this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
     this.platforms.create(600, 400, 'ground');
     this.platforms.create(50, 250, 'ground');
     this.platforms.create(750, 220, 'ground');
-
+    // Treasures
     this.coins = this.add.group({
       defaultKey: 'coin',
     });
@@ -58,13 +58,15 @@ export class GameScene extends Phaser.Scene {
     this.coins.create(550, 440, 'coin')
     this.coins.create(720, 300, 'coin')
     this.coins.create(690, 150, 'coin')
-
+    // Crushing walls
     this.walls = this.physics.add.group({
       allowGravity: false,
       immovable: true
     });
-    this.topWall = this.add.tileSprite(400, 16, 800, 40, 'wall')
+    this.topWall = this.add.tileSprite(440, 16, 800, 40, 'wall')
     this.walls.add(this.topWall)
+    this.bottomWall = this.add.tileSprite(440, 600, 800, 40, 'wall')
+    this.walls.add(this.bottomWall)
 
     this.player = new Player(this, 100, 450);
 
@@ -104,21 +106,41 @@ export class GameScene extends Phaser.Scene {
     */
 
     this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
-    this.physics.add.overlap(this.player, this.walls, () => {
-      console.log('Squimshed!');
-      this.die();
-    }, null, this);
+    this.physics.add.overlap(this.player, this.walls, this.playerWallOverlapCheck, null, this);
+    this.physics.add.overlap(this.player, this.platforms, this.playerPlatformOverlapCheck, null, this);
   }
 
   update(): void {
     // Move walls
     this.topWall.setY(this.topWall.y + .1)
+    this.bottomWall.setY(this.bottomWall.y - .1)
     // Whyyyyyyy???!!!!
     this.player.update()
     // Death animation 
     if (this.player.isDead) {
       this.playOutDeath()
     }
+  }
+
+  playerPlatformOverlapCheck(gameObject1, gameObject2): void {
+    this.die();
+  }
+
+  playerWallOverlapCheck(gameObject1, gameObject2): void {
+      // console.log('Squimshed!');
+      if (gameObject1 == this.topWall || gameObject2 == this.topWall) {
+        // topWall overlaps work
+        this.die();
+      } else {
+        // Need to do a more precise check for actual overlap of bottomWall
+        // const _bottomWall: Phaser.GameObjects.TileSprite = gameObject1 == this.bottomWall ? gameObject1 : gameObject2
+        /*
+        const _bottomWallTopY = this.bottomWall.getTopCenter().y
+        const _playerBottomY = this.player.getBottomCenter().y
+        console.log(`playerWallOverlapCheck() -> Overlapping bottomWall | _bottomWallTopY = ${_bottomWallTopY} | _playerBottomY = ${_playerBottomY}`)
+        */
+      }
+      
   }
 
   /*
@@ -130,12 +152,13 @@ export class GameScene extends Phaser.Scene {
   collectCoin(player, coin): void {
     // Can't collect when you're dead
     if (this.player.isDead) { return }
-    
+
     coin.disableBody(true, true)
     this.coinsLeftText.setText('Coins Left: ' + this.coins.countActive(true))
     if (this.coins.countActive(true) < 1) {
-      // Scene.shutdown()
       // Move to next scene
+      // Scene.shutdown()
+      this.scene.start()
     }
   }
 
@@ -154,9 +177,9 @@ export class GameScene extends Phaser.Scene {
 
   playOutDeath(): void {
     if (!Phaser.Geom.Rectangle.Overlaps(this.physics.world.bounds, this.player.getBounds())) {
-      console.log('update() -> Dead Player is out of bounds')
+      // console.log('update() -> Dead Player is out of bounds')
       if (this.player.y > this.physics.world.bounds.height * 2) {
-        console.log('update() -> Dead Player has fallen out of the world. Restarting scene.')
+        // console.log('update() -> Dead Player has fallen out of the world. Restarting scene.')
         this.scene.start()
       }
     }
