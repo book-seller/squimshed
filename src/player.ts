@@ -3,8 +3,8 @@ import * as Phaser from 'phaser';
 export class Player extends Phaser.Physics.Arcade.Sprite {
     cursors: Phaser.Types.Input.Keyboard.CursorKeys
 
-    walkSpeed: number = 235;
-    jumpSpeed: number = 550;
+    walkSpeed: number = 235
+    jumpSpeed: number = 550
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'derg', 0);
@@ -18,6 +18,9 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         // Bounce = artificial difficulty
         // this.setBounce(0.2);
         this.setCollideWorldBounds(true);
+
+        // This enables the world 'collide' event, which will be detected by the scene collider
+        this.body.onCollide = true;
 
         // TODO: Bring this back when we have dragon animations
         /*
@@ -67,5 +70,12 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
           if (this.cursors.up.isDown && this.body.touching.down) {
             this.setVelocityY(-this.jumpSpeed);
           }
+
+          // This doesn't work
+          /*
+          if (this.body.touching.up && this.body.touching.down) {
+            console.log('Squimshed!')
+          }
+          */
     }
 }

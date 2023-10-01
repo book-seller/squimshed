@@ -16,7 +16,15 @@ export class GameScene extends Phaser.Scene {
     });
   }
 
-  init(): void { }
+  init(): void {
+    // TODO: May need to initialize a lot of our fields as empty here so we can easily restart the level on death
+    this.platforms = undefined
+    this.coins = undefined
+    this.walls = undefined
+    this.topWall = undefined
+    this.player = undefined
+    this.coinsLeftText = undefined
+  }
 
   create(): void {
     this.cameras.main.setBounds(0, 0, 1000, 700);
@@ -33,7 +41,7 @@ export class GameScene extends Phaser.Scene {
     this.coins = this.add.group({
       defaultKey: 'coin',
     });
-    
+
     this.coins = this.physics.add.group({
       key: 'coin',
       setXY: { x: 62, y: 150 },
@@ -62,7 +70,33 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.platforms);
     this.physics.add.collider(this.coins, this.platforms);
 
+    /*
+    this.physics.world.on('collide', (gameObject1, gameObject2) => {
+      let collidedPlayer
+      let collidedTopWall
+
+      if (gameObject1 == this.player && gameObject2 == this.topWall) {
+        console.log('[game-scene -> collide check] gameObject1 == this.player && gameObject2 == this.topWall')
+        collidedPlayer = gameObject1
+        collidedTopWall = gameObject2
+      }
+      if (gameObject1 == this.topWall && gameObject2 == this.player) {
+        console.log('[game-scene -> collide check] gameObject1 == this.topWall && gameObject2 == this.player')
+        collidedTopWall = gameObject1
+        collidedPlayer = gameObject2
+      }
+
+      if (collidedPlayer && collidedTopWall && this.player.body.touching.up) {
+        console.log('Touching up on wall - squimsh potential')
+      }
+
+      gameObject1.setAlpha(0.5);
+      gameObject2.setAlpha(0.5);
+    });
+    */
+
     this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
+    this.physics.add.overlap(this.player, this.walls, this.die, null, this);
   }
 
   update(): void {
@@ -72,9 +106,27 @@ export class GameScene extends Phaser.Scene {
     this.player.update()
   }
 
+  /*
+  checkTopWallSquish(player, topWall): void {
+    console.log('checkTopWallSquish() -> ')
+  }
+  */
+
   collectCoin(player, coin): void {
     coin.disableBody(true, true)
     this.coinsLeftText.setText('Coins Left: ' + this.coins.countActive(true))
+    if (this.coins.countActive(true) < 1) {
+      // Scene.shutdown()
+      // Move to next scene
+    }
+  }
+
+  die(): void {
+    console.log('Squimshed!')
+    // Stop all movement on screen
+    // Play Sonic death animation 
+    // Restart scene
+    // this.scene.start()
   }
 
 }
