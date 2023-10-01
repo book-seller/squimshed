@@ -28,6 +28,9 @@ export class GameScene extends Phaser.Scene {
     this.topWall = undefined
     this.player = undefined
     this.coinsLeftText = undefined
+    // Colliders
+    this.playerWallCollider = undefined
+    this.playerPlatformCollider = undefined
   }
 
   create(): void {
@@ -101,10 +104,10 @@ export class GameScene extends Phaser.Scene {
     */
 
     this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
-    this.physics.add.overlap(this.player, this.walls, () => { 
-      console.log('Squimshed!'); 
+    this.physics.add.overlap(this.player, this.walls, () => {
+      console.log('Squimshed!');
       this.die();
-    } , null, this);
+    }, null, this);
   }
 
   update(): void {
@@ -112,6 +115,10 @@ export class GameScene extends Phaser.Scene {
     this.topWall.setY(this.topWall.y + .1)
     // Whyyyyyyy???!!!!
     this.player.update()
+    // Death animation 
+    if (this.player.isDead) {
+      this.playOutDeath()
+    }
   }
 
   /*
@@ -121,6 +128,9 @@ export class GameScene extends Phaser.Scene {
   */
 
   collectCoin(player, coin): void {
+    // Can't collect when you're dead
+    if (this.player.isDead) { return }
+    
     coin.disableBody(true, true)
     this.coinsLeftText.setText('Coins Left: ' + this.coins.countActive(true))
     if (this.coins.countActive(true) < 1) {
@@ -132,15 +142,23 @@ export class GameScene extends Phaser.Scene {
   die(): void {
     if (!this.player.isDead) {
       this.player.isDead = true
-      
+
       this.playerWallCollider.destroy()
       this.playerPlatformCollider.destroy()
       this.player.setCollideWorldBounds(false)
 
       this.player.setVelocityX(0)
       this.player.setVelocityY(-800)
-      // Restart scene
-      // this.scene.start()
+    }
+  }
+
+  playOutDeath(): void {
+    if (!Phaser.Geom.Rectangle.Overlaps(this.physics.world.bounds, this.player.getBounds())) {
+      console.log('update() -> Dead Player is out of bounds')
+      if (this.player.y > this.physics.world.bounds.height * 2) {
+        console.log('update() -> Dead Player has fallen out of the world. Restarting scene.')
+        this.scene.start()
+      }
     }
   }
 
