@@ -2,13 +2,16 @@ import * as Phaser from 'phaser';
 import { Player } from '../player';
 
 export class GameScene extends Phaser.Scene {
-
-  player: Phaser.Physics.Arcade.Sprite
+  // Sprites
+  player: Player
   platforms: Phaser.Physics.Arcade.StaticGroup
   walls: Phaser.Physics.Arcade.Group
   coins: Phaser.GameObjects.Group
   topWall: Phaser.GameObjects.TileSprite
   coinsLeftText: Phaser.GameObjects.Text
+  // Colliders
+  playerWallCollider: Phaser.Physics.Arcade.Collider
+  playerPlatformCollider: Phaser.Physics.Arcade.Collider
 
   constructor() {
     super({
@@ -18,6 +21,7 @@ export class GameScene extends Phaser.Scene {
 
   init(): void {
     // TODO: May need to initialize a lot of our fields as empty here so we can easily restart the level on death
+    // Sprites
     this.platforms = undefined
     this.coins = undefined
     this.walls = undefined
@@ -66,9 +70,10 @@ export class GameScene extends Phaser.Scene {
     this.coinsLeftText = this.add.text(30, 530, 'Coins Left: 4').setFontFamily('Monospace').setFontSize(32)
       .setColor('#fff').setScrollFactor(0, 0)
 
-    this.physics.add.collider(this.player, this.walls);
-    this.physics.add.collider(this.player, this.platforms);
-    this.physics.add.collider(this.coins, this.platforms);
+    this.playerWallCollider = this.physics.add.collider(this.player, this.walls);
+    this.playerPlatformCollider = this.physics.add.collider(this.player, this.platforms);
+    // Why did I add this?
+    // this.physics.add.collider(this.coins, this.platforms);
 
     /*
     this.physics.world.on('collide', (gameObject1, gameObject2) => {
@@ -96,7 +101,10 @@ export class GameScene extends Phaser.Scene {
     */
 
     this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
-    this.physics.add.overlap(this.player, this.walls, this.die, null, this);
+    this.physics.add.overlap(this.player, this.walls, () => { 
+      console.log('Squimshed!'); 
+      this.die();
+    } , null, this);
   }
 
   update(): void {
@@ -122,11 +130,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   die(): void {
-    console.log('Squimshed!')
-    // Stop all movement on screen
-    // Play Sonic death animation 
-    // Restart scene
-    // this.scene.start()
+    if (!this.player.isDead) {
+      this.player.isDead = true
+      
+      this.playerWallCollider.destroy()
+      this.playerPlatformCollider.destroy()
+      this.player.setCollideWorldBounds(false)
+
+      this.player.setVelocityX(0)
+      this.player.setVelocityY(-800)
+      // Restart scene
+      // this.scene.start()
+    }
   }
 
 }
