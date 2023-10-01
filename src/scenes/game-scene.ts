@@ -7,8 +7,8 @@ export class GameScene extends Phaser.Scene {
   platforms: Phaser.Physics.Arcade.StaticGroup
   walls: Phaser.Physics.Arcade.Group
   coins: Phaser.GameObjects.Group
-  // topWall: Phaser.Types.Physics.Arcade.ImageWithDynamicBody
   topWall: Phaser.GameObjects.TileSprite
+  coinsLeftText: Phaser.GameObjects.Text
 
   constructor() {
     super({
@@ -48,19 +48,17 @@ export class GameScene extends Phaser.Scene {
       allowGravity: false,
       immovable: true
     });
-    // The wall sprite is 400x32 <- now it is 100 x 40
-    // this.topWall = this.physics.add.image(400, 16, 'wall').setImmovable(true)
     this.topWall = this.add.tileSprite(400, 16, 800, 40, 'wall')
-    // this.topWall.setScale(2, 1)
-    // this.topWall.body.setAllowGravity(false);
-    // Adding a wall to the walls group breaks everything. Weird. 
     this.walls.add(this.topWall)
 
     this.player = new Player(this, 100, 450);
 
     this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
-    this.physics.add.collider(this.player, this.topWall);
+    this.coinsLeftText = this.add.text(30, 530, 'Coins Left: 4').setFontFamily('Monospace').setFontSize(32)
+      .setColor('#fff').setScrollFactor(0, 0)
+
+    this.physics.add.collider(this.player, this.walls);
     this.physics.add.collider(this.player, this.platforms);
     this.physics.add.collider(this.coins, this.platforms);
 
@@ -75,8 +73,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   collectCoin(player, coin): void {
-    // console.log('collectCoin() -> collision detected')
     coin.disableBody(true, true)
+    this.coinsLeftText.setText('Coins Left: ' + this.coins.countActive(true))
   }
 
 }
