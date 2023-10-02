@@ -4,15 +4,17 @@ import { Player } from '../player';
 export class GameScene extends Phaser.Scene {
   // Sprites
   player: Player
-  platforms: Phaser.Physics.Arcade.StaticGroup
+  stonePlatforms: Phaser.Physics.Arcade.Group
   walls: Phaser.Physics.Arcade.Group
   coins: Phaser.GameObjects.Group
   topWall: Phaser.GameObjects.TileSprite
   bottomWall: Phaser.GameObjects.TileSprite
+  woodPlatforms: Phaser.Physics.Arcade.Group
   coinsLeftText: Phaser.GameObjects.Text
   // Colliders
   playerWallCollider: Phaser.Physics.Arcade.Collider
-  playerPlatformCollider: Phaser.Physics.Arcade.Collider
+  playerStoneCollider: Phaser.Physics.Arcade.Collider
+  playerWoodCollider: Phaser.Physics.Arcade.Collider
 
   constructor() {
     super({
@@ -23,27 +25,40 @@ export class GameScene extends Phaser.Scene {
   init(): void {
     // TODO: May need to initialize a lot of our fields as empty here so we can easily restart the level on death
     // Sprites
-    this.platforms = undefined
+    this.stonePlatforms = undefined
     this.coins = undefined
     this.walls = undefined
     this.topWall = undefined
     this.bottomWall = undefined
+    this.woodPlatforms = undefined
     this.player = undefined
     this.coinsLeftText = undefined
     // Colliders
     this.playerWallCollider = undefined
-    this.playerPlatformCollider = undefined
+    this.playerStoneCollider = undefined
+    this.playerWoodCollider = undefined
   }
 
   create(): void {
     this.cameras.main.setBounds(0, 0, 1000, 700);
     this.physics.world.setBounds(0, 0, 1000, 700);
-    // Platforms
-    this.platforms = this.physics.add.staticGroup();
-    this.platforms.create(400, 568, 'ground').setScale(2).refreshBody();
-    this.platforms.create(600, 400, 'ground');
-    this.platforms.create(50, 250, 'ground');
-    this.platforms.create(750, 220, 'ground');
+    // Stone Platforms
+    // this.stonePlatforms = this.physics.add.staticGroup();
+    this.stonePlatforms = this.physics.add.group({
+      allowGravity: false,
+      immovable: true
+    });
+    this.stonePlatforms.add(this.add.tileSprite(180, 510, 40, 80, 'stone'))
+    // Wood Platforms
+    // Old platform.png is 400 x 32
+    this.woodPlatforms = this.physics.add.group({
+      allowGravity: false,
+      immovable: true
+    });
+    this.woodPlatforms.add(this.add.tileSprite(750, 220, 400, 40, 'wood'))
+    this.woodPlatforms.add(this.add.tileSprite(50, 250, 400, 40, 'wood'))
+    this.woodPlatforms.add(this.add.tileSprite(600, 400, 400, 40, 'wood'))
+    this.woodPlatforms.add(this.add.tileSprite(400, 568, 800, 40, 'wood'))
     // Treasures
     this.coins = this.add.group({
       defaultKey: 'coin',
@@ -76,9 +91,8 @@ export class GameScene extends Phaser.Scene {
       .setColor('#fff').setScrollFactor(0, 0)
 
     this.playerWallCollider = this.physics.add.collider(this.player, this.walls);
-    this.playerPlatformCollider = this.physics.add.collider(this.player, this.platforms);
-    // Why did I add this?
-    // this.physics.add.collider(this.coins, this.platforms);
+    this.playerStoneCollider = this.physics.add.collider(this.player, this.stonePlatforms);
+    this.playerWoodCollider = this.physics.add.collider(this.player, this.woodPlatforms);
 
     /*
     this.physics.world.on('collide', (gameObject1, gameObject2) => {
@@ -107,7 +121,8 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.coins, this.collectCoin, null, this);
     this.physics.add.overlap(this.player, this.walls, this.playerWallOverlapCheck, null, this);
-    this.physics.add.overlap(this.player, this.platforms, this.playerPlatformOverlapCheck, null, this);
+    this.physics.add.overlap(this.player, this.stonePlatforms, this.playerPlatformOverlapCheck, null, this);
+    this.physics.add.overlap(this.player, this.woodPlatforms, this.playerPlatformOverlapCheck, null, this);
   }
 
   update(): void {
@@ -143,12 +158,6 @@ export class GameScene extends Phaser.Scene {
       
   }
 
-  /*
-  checkTopWallSquish(player, topWall): void {
-    console.log('checkTopWallSquish() -> ')
-  }
-  */
-
   collectCoin(player, coin): void {
     // Can't collect when you're dead
     if (this.player.isDead) { return }
@@ -167,7 +176,8 @@ export class GameScene extends Phaser.Scene {
       this.player.isDead = true
 
       this.playerWallCollider.destroy()
-      this.playerPlatformCollider.destroy()
+      this.playerStoneCollider.destroy()
+      this.playerWoodCollider.destroy()
       this.player.setCollideWorldBounds(false)
 
       this.player.setVelocityX(0)
