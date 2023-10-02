@@ -12,6 +12,15 @@
         "url": "./assets/sprites/player-dragon.png"
       },
       {
+        "type": "spritesheet",
+        "key": "derg-spritesheet",
+        "url": "./assets/sprites/derg-spritesheet.png",
+        "frameConfig": {
+          "frameWidth": 40,
+          "frameHeight": 80
+        }
+      },
+      {
         "type": "image",
         "key": "ground",
         "url": "./assets/sprites/platform.png"
