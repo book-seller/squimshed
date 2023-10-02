@@ -17,6 +17,8 @@ export class GameScene extends Phaser.Scene {
   playerWallCollider: Phaser.Physics.Arcade.Collider
   playerStoneCollider: Phaser.Physics.Arcade.Collider
   playerWoodCollider: Phaser.Physics.Arcade.Collider
+  // Audio
+  music: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
 
   constructor() {
     super({
@@ -41,9 +43,17 @@ export class GameScene extends Phaser.Scene {
     this.playerWallCollider = undefined
     this.playerStoneCollider = undefined
     this.playerWoodCollider = undefined
+    // Audio
+    // Keep music object around to keep playing the song on death
+    // this.music = undefined
   }
 
   create(): void {
+    if (!this.music) {
+      this.music = this.sound.add('gameplay')
+      this.music.play()
+    }
+
     this.cameras.main.setBounds(0, 0, 1000, 700);
     this.physics.world.setBounds(0, 0, 1000, 700);
     // Stone Platforms

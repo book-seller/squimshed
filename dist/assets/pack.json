@@ -45,6 +45,16 @@
           "type": "image",
           "key": "wood",
           "url": "./assets/tiles/wood-platform.png"
+        },
+        {
+          "type": "audio",
+          "key": "intro",
+          "url": "./assets/music/squimshed-intro.mp3"
+        },
+        {
+          "type": "audio",
+          "key": "gameplay",
+          "url": "./assets/music/squimshed-gameplay.mp3"
         }
       ]
     }
