@@ -21,6 +21,8 @@ export class GameScene extends Phaser.Scene {
   music: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
   coinGetSound: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
   deathSound: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
+  // Hack
+  moveWalls = true
 
   constructor() {
     super({
@@ -125,10 +127,12 @@ export class GameScene extends Phaser.Scene {
 
   update(): void {
     // Move walls
-    this.topWall.setY(this.topWall.y + .1)
-    this.bottomWall.setY(this.bottomWall.y - .1)
-    this.leftWall.setX(this.leftWall.x + .1)
-    this.rightWall.setX(this.rightWall.x - .1)
+    if (this.moveWalls) {
+      this.topWall.setY(this.topWall.y + .1)
+      this.bottomWall.setY(this.bottomWall.y - .1)
+      this.leftWall.setX(this.leftWall.x + .1)
+      this.rightWall.setX(this.rightWall.x - .1)
+    }
     // Whyyyyyyy???!!!!
     this.player.update()
     // Death animation 
@@ -190,8 +194,12 @@ export class GameScene extends Phaser.Scene {
     this.coinGetSound.play()
     this.coinsLeftText.setText('Coins Left: ' + this.coins.countActive(true))
     if (this.coins.countActive(true) < 1) {
-      // Move to next scene
-      this.scene.start()
+      // Move to next scene ... is what I'd do if I hadn't run out of time
+      // this.scene.start()
+      // this.walls.destroy()
+      this.moveWalls = false
+      this.coinsLeftText.setFontSize(14)
+      this.coinsLeftText.setText('Congratulations. You won. Thanks for playing. Sorry there is so little game here.')
     }
   }
 
