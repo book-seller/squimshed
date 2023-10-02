@@ -53,7 +53,6 @@ export class GameScene extends Phaser.Scene {
     });
     this.stonePlatforms.add(this.add.tileSprite(180, 510, 40, 80, 'stone'))
     // Wood Platforms
-    // Old platform.png is 400 x 32
     this.woodPlatforms = this.physics.add.group({
       allowGravity: false,
       immovable: true
@@ -143,6 +142,12 @@ export class GameScene extends Phaser.Scene {
     if (gameObject1 == this.topWall || gameObject2 == this.topWall) {
       // topWall overlaps work
       this.die()
+    }
+    else if (gameObject1 == this.rightWall || gameObject2 == this.rightWall) {
+      // HACK: This seems to be the only way to find a kill condition for both walls colliding on the player
+      if (this.player.getLeftCenter().x <= this.leftWall.getRightCenter().x) {
+        this.die()
+      }
     }
   }
 
