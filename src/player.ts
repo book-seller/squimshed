@@ -10,16 +10,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, 'derg', 0);
         // Enable Player's Physics Body
         scene.physics.world.enable(this)
-        // All of these attempts to enable the body failed, sigh
-        // scene.game.physics.arcade.enableBody(this);
-        // scene.physics.add.sprite(x, y, 'dude')
-        // this.enableBody();
-        // this.anchor.setTo(0.5, 0);
-        // Bounce = artificial difficulty
-        // this.setBounce(0.2);
         this.setCollideWorldBounds(true);
-
-        // This enables the world 'collide' event, which will be detected by the scene collider
         this.body.onCollide = true;
 
         // TODO: Bring this back when we have dragon animations
@@ -71,18 +62,6 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.cursors.up.isDown && this.body.touching.down) {
           this.setVelocityY(-this.jumpSpeed);
         }
-
-        // This doesn't work
-        /*
-        if (this.body.touching.up && this.body.touching.down) {
-          console.log('Squimshed!')
-        }
-        */
       }
     }
-    /*
-    isDead(): boolean {
-      return this.isDead
-    }
-    */
 }
