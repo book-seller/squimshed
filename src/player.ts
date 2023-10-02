@@ -5,6 +5,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     walkSpeed: number = 235
     jumpSpeed: number = 550
     isDead: boolean
+    jumpSound: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
 
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, 'derg', 0);
@@ -12,6 +13,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.world.enable(this)
         this.setCollideWorldBounds(true);
         this.body.onCollide = true;
+
+        this.jumpSound = scene.sound.add('jump')
 
         // TODO: Bring this back when we have dragon animations
         /*
@@ -60,7 +63,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
         }
     
         if (this.cursors.up.isDown && this.body.touching.down) {
-          this.setVelocityY(-this.jumpSpeed);
+          this.setVelocityY(-this.jumpSpeed)
+          this.jumpSound.play()
         }
       }
     }

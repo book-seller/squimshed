@@ -1,62 +1,76 @@
 {
-    "preload": {
-      "files": [
-        {
-          "type": "tilemapTiledJSON",
-          "key": "level-1-map",
-          "url": "./assets/maps/level-1-map.json"
-        },
-        {
-          "type": "image",
-          "key": "player-dragon",
-          "url": "./assets/sprites/player-dragon.png"
-        },
-        {
-          "type": "image",
-          "key": "ground",
-          "url": "./assets/sprites/platform.png"
-        },
-        {
-          "type": "image",
-          "key": "wall",
-          "url": "./assets/sprites/wall.png"
-        },
-        {
-          "type": "image",
-          "key": "coin",
-          "url": "./assets/sprites/coin.png"
-        },
-        {
-          "type": "image",
-          "key": "derg",
-          "url": "./assets/sprites/derg.png"
-        },
-        {
-          "type": "image",
-          "key": "spikes",
-          "url": "./assets/tiles/spikes.png"
-        },
-        {
-          "type": "image",
-          "key": "stone",
-          "url": "./assets/tiles/stone-tile.png"
-        },
-        {
-          "type": "image",
-          "key": "wood",
-          "url": "./assets/tiles/wood-platform.png"
-        },
-        {
-          "type": "audio",
-          "key": "intro",
-          "url": "./assets/music/squimshed-intro.mp3"
-        },
-        {
-          "type": "audio",
-          "key": "gameplay",
-          "url": "./assets/music/squimshed-gameplay.mp3"
-        }
-      ]
-    }
+  "preload": {
+    "files": [
+      {
+        "type": "tilemapTiledJSON",
+        "key": "level-1-map",
+        "url": "./assets/maps/level-1-map.json"
+      },
+      {
+        "type": "image",
+        "key": "player-dragon",
+        "url": "./assets/sprites/player-dragon.png"
+      },
+      {
+        "type": "image",
+        "key": "ground",
+        "url": "./assets/sprites/platform.png"
+      },
+      {
+        "type": "image",
+        "key": "wall",
+        "url": "./assets/sprites/wall.png"
+      },
+      {
+        "type": "image",
+        "key": "coin",
+        "url": "./assets/sprites/coin.png"
+      },
+      {
+        "type": "image",
+        "key": "derg",
+        "url": "./assets/sprites/derg.png"
+      },
+      {
+        "type": "image",
+        "key": "spikes",
+        "url": "./assets/tiles/spikes.png"
+      },
+      {
+        "type": "image",
+        "key": "stone",
+        "url": "./assets/tiles/stone-tile.png"
+      },
+      {
+        "type": "image",
+        "key": "wood",
+        "url": "./assets/tiles/wood-platform.png"
+      },
+      {
+        "type": "audio",
+        "key": "intro",
+        "url": "./assets/music/squimshed-intro.mp3"
+      },
+      {
+        "type": "audio",
+        "key": "gameplay",
+        "url": "./assets/music/squimshed-gameplay.mp3"
+      },
+      {
+        "type": "audio",
+        "key": "coin-get",
+        "url": "./assets/sfx/coin-get.wav"
+      },
+      {
+        "type": "audio",
+        "key": "death",
+        "url": "./assets/sfx/death.wav"
+      },
+      {
+        "type": "audio",
+        "key": "jump",
+        "url": "./assets/sfx/jump.wav"
+      }
+    ]
   }
-  
+}

@@ -19,6 +19,8 @@ export class GameScene extends Phaser.Scene {
   playerWoodCollider: Phaser.Physics.Arcade.Collider
   // Audio
   music: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
+  coinGetSound: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
+  deathSound: Phaser.Sound.WebAudioSound | Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound
 
   constructor() {
     super({
@@ -51,6 +53,10 @@ export class GameScene extends Phaser.Scene {
   create(): void {
     if (!this.music) {
       this.music = this.sound.add('gameplay')
+
+      this.coinGetSound = this.sound.add('coin-get')
+      this.deathSound = this.sound.add('death')
+
       this.music.play()
     }
 
@@ -181,6 +187,7 @@ export class GameScene extends Phaser.Scene {
     if (this.player.isDead) { return }
 
     coin.disableBody(true, true)
+    this.coinGetSound.play()
     this.coinsLeftText.setText('Coins Left: ' + this.coins.countActive(true))
     if (this.coins.countActive(true) < 1) {
       // Move to next scene
@@ -191,6 +198,7 @@ export class GameScene extends Phaser.Scene {
   die(): void {
     if (!this.player.isDead) {
       this.player.isDead = true
+      this.deathSound.play()
 
       this.playerWallCollider.destroy()
       this.playerStoneCollider.destroy()
