@@ -9,6 +9,7 @@ export class GameScene extends Phaser.Scene {
   coins: Phaser.GameObjects.Group
   topWall: Phaser.GameObjects.TileSprite
   bottomWall: Phaser.GameObjects.TileSprite
+  leftWall: Phaser.GameObjects.TileSprite
   woodPlatforms: Phaser.Physics.Arcade.Group
   coinsLeftText: Phaser.GameObjects.Text
   // Colliders
@@ -30,6 +31,7 @@ export class GameScene extends Phaser.Scene {
     this.walls = undefined
     this.topWall = undefined
     this.bottomWall = undefined
+    this.leftWall = undefined
     this.woodPlatforms = undefined
     this.player = undefined
     this.coinsLeftText = undefined
@@ -82,6 +84,8 @@ export class GameScene extends Phaser.Scene {
     this.walls.add(this.topWall)
     this.bottomWall = this.add.tileSprite(440, 600, 800, 40, 'wall')
     this.walls.add(this.bottomWall)
+    this.leftWall = this.add.tileSprite(0, 400, 40, 800, 'wall')
+    this.walls.add(this.leftWall)
 
     this.player = new Player(this, 100, 450);
 
@@ -90,7 +94,7 @@ export class GameScene extends Phaser.Scene {
     this.coinsLeftText = this.add.text(30, 530, 'Coins Left: 4').setFontFamily('Monospace').setFontSize(32)
       .setColor('#fff').setScrollFactor(0, 0)
 
-    this.playerWallCollider = this.physics.add.collider(this.player, this.walls);
+    this.playerWallCollider = this.physics.add.collider(this.player, this.walls, this.playerWallCollideCheck, null, this);
     this.playerStoneCollider = this.physics.add.collider(this.player, this.stonePlatforms);
     this.playerWoodCollider = this.physics.add.collider(this.player, this.woodPlatforms);
 
@@ -129,11 +133,23 @@ export class GameScene extends Phaser.Scene {
     // Move walls
     this.topWall.setY(this.topWall.y + .1)
     this.bottomWall.setY(this.bottomWall.y - .1)
+    this.leftWall.setX(this.leftWall.x + .1)
     // Whyyyyyyy???!!!!
     this.player.update()
     // Death animation 
     if (this.player.isDead) {
       this.playOutDeath()
+    }
+  }
+
+  playerWallCollideCheck(gameObject1, gameObject2): void {
+    if (gameObject1 == this.leftWall || gameObject2 == this.leftWall) {
+      console.log('playerWallCollideCheck() -> player is colliding with left wall')
+      // Attempt to "help" Phaser's poor physics code
+      if (this.player.getLeftCenter().x < this.leftWall.getRightCenter().x) {
+        console.log('playerWallCollideCheck() -> trying to push player to right')
+        this.player.setX(this.leftWall.getRightCenter().x + (this.player.width / 2));
+      }
     }
   }
 
