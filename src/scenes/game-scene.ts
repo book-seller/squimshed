@@ -52,6 +52,7 @@ export class GameScene extends Phaser.Scene {
       immovable: true
     });
     this.stonePlatforms.add(this.add.tileSprite(180, 510, 40, 80, 'stone'))
+    this.stonePlatforms.add(this.add.tileSprite(670, 530, 40, 40, 'stone'))
     // Wood Platforms
     this.woodPlatforms = this.physics.add.group({
       allowGravity: false,
@@ -128,6 +129,10 @@ export class GameScene extends Phaser.Scene {
       }
     }
     if (gameObject1 == this.rightWall || gameObject2 == this.rightWall) {
+      // HACK: This seems to be the only way to find a kill condition for both walls colliding on the player
+      if (this.player.getLeftCenter().x <= this.leftWall.getRightCenter().x) {
+        this.die()
+      }
       if (this.player.getRightCenter().x > this.rightWall.getLeftCenter().x) {
         this.player.setX(this.rightWall.getLeftCenter().x - (this.player.width / 2));
       }
@@ -146,6 +151,16 @@ export class GameScene extends Phaser.Scene {
     else if (gameObject1 == this.rightWall || gameObject2 == this.rightWall) {
       // HACK: This seems to be the only way to find a kill condition for both walls colliding on the player
       if (this.player.getLeftCenter().x <= this.leftWall.getRightCenter().x) {
+        this.die()
+      }
+      // HACK: This stops the player from passing through crushing walls by holding left against a collidable
+      if (Math.abs(this.player.x - this.rightWall.x) < 30) {
+        this.die()
+      }
+    }
+    else if (gameObject1 == this.leftWall || gameObject2 == this.leftWall) {
+      // HACK: This stops the player from passing through crushing walls by holding right against a collidable
+      if (Math.abs(this.player.x - this.leftWall.x) < 30) {
         this.die()
       }
     }
